@@ -2,7 +2,7 @@
     "name": "ascott/entity-transformer",
     "description": "This is a module that applies JSON transformations to objects",
     "type": "library",
-    "license": "MIT",
+    "license": "GPL-3.0",
     "authors": [
         {
             "name": "Alejandro Scott",
@@ -16,12 +16,12 @@
     },
     "autoload": {
         "psr-4": {
-            "HelloWorld\\": "src"
+            "EntityTransformer\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "HelloWorld\\": "tests"
+            "EntityTransformer\\": "tests/"
         }
     }
 }

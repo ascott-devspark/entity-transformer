@@ -11,13 +11,13 @@ class TransformerFactory
 
     const FIRST_NOT_NULL = 'first_not_null';
 
-    public static function create($key, $transformation)
+    public static function create($entity, $key, $transformation)
     {
         switch ($key) {
             case self::FIRST_NOT_NULL:
-                return new FirstOrNullTransformer($transformation);
+                return new FirstOrNullTransformer($entity, $transformation);
             default:
-                return new SimpleTransformer($transformation);
+                return new SimpleTransformer($entity, $transformation);
         }
     }
 }

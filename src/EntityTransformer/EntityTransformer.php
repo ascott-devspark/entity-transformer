@@ -3,6 +3,7 @@
 namespace EntityTransformer;
 
 use EntityTransformer\EntityTransformer\TransformerFactory;
+use EntityTransformer\Transformers\AbstractTransformer;
 
 class EntityTransformer
 {
@@ -11,6 +12,8 @@ class EntityTransformer
     private $transf;
 
     private $transformers;
+
+    private $properties = [];
 
     public function __construct($entity, $transformations = []) {
         $this->entity = $entity;
@@ -53,6 +56,8 @@ class EntityTransformer
             $json = json_decode($transformation, true);
             $transformers = [];
 
+            $this->properties = array_unique(array_merge($this->properties, array_keys($json)));
+
             foreach ($json as $property => $txtTransf) {
                 // Use regular expresion to determinate if it is a simple or function transformer
                 $re = '/(\w+\()?(\{.*\}+)\)?/im';
@@ -69,25 +74,38 @@ class EntityTransformer
                         $transKey = substr($match[1], 0, -1);
                         $transStr = $match[2];
                     }
-                    $transformers[$property] = TransformerFactory::create($transKey, $transStr);
+                    $transformers[$property] = TransformerFactory::create($this->entity, $transKey, $transStr);
                 }
             }
             if (!empty($transformers)) {
                 $this->transformers[] = $transformers;
             }
         }
-        $this->dd($this->transformers);
+        $this->dd($this->properties);
     }
 
-    public function setTransf($transf) {
-        $this->transf = $transf;
+    public function addTransformation($transf) {
+        $this->transf[] = $transf;
         return $this;
     }
 
-    public function __call($method_name, $args) {
+    public function setTransformations($transformations) {
+        $this->transf = $transformations;
+        return $this;
+    }
 
+    public function __get($property) {
+        $value = $this->entity->{$property};
 
-        return call_user_func_array(array($this->foo, $method_name), $args);
+        if (in_array($property, $this->properties)) {
+            // If property should be transformed apply transformations
+            foreach($this->transformers as $transformer) {
+                $value = $transformer->transform($property);
+            }
+        }
+
+        return $value;
+
     }
 
     private function dd() {

@@ -4,11 +4,14 @@ namespace EntityTransformer\Transformers;
 
 abstract class AbstractTransformer
 {
-    protected $stTransf;
+    protected $transf;
 
-    public function __construct($transf)
+    protected $entity;
+
+    public function __construct($entity, $transf)
     {
-        $this->stTransf = $transf;
+        $this->entity = $entity;
+        $this->transf = $transf;
     }
 
     abstract function transform();

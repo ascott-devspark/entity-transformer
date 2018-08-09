@@ -100,7 +100,9 @@ class EntityTransformer
         if (in_array($property, $this->properties)) {
             // If property should be transformed apply transformations
             foreach($this->transformers as $transformer) {
-                $value = $transformer->transform($property);
+                if (isset($transformer[$property])) {
+                    $value = $transformer->transform($value);
+                }
             }
         }
 

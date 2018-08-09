@@ -14,5 +14,6 @@ abstract class AbstractTransformer
         $this->transf = $transf;
     }
 
-    abstract function transform();
+    abstract public function transform($property
+    );
 }
